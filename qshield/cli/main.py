@@ -129,17 +129,33 @@ def cmd_serve(args: argparse.Namespace) -> int:
     """Launch the interactive FastAPI web dashboard."""
     try:
         import uvicorn
+        import socket
     except ImportError:
         print("Error: uvicorn is required to run the server. Install via: pip install uvicorn fastapi")
         return 1
 
+    port = args.port
+    host = args.host
+
+    # Check if requested port is in use, fallback to next free port (e.g. 8080, 8001)
+    def is_port_in_use(p: int) -> bool:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            return s.connect_ex((host, p)) == 0
+
+    if is_port_in_use(port):
+        for candidate in [8080, 8001, 8002, 8888, 5000]:
+            if not is_port_in_use(candidate):
+                print(f"Note: Port {port} is occupied by another process. Automatically using port {candidate}.")
+                port = candidate
+                break
+
     print("=" * 60)
     print("      PROJECT Q-SHIELD: QUANTUM THREAT DASHBOARD")
     print("=" * 60)
-    print(f" Serving on : http://{args.host}:{args.port}")
-    print(f" API Docs   : http://{args.host}:{args.port}/docs")
+    print(f" Serving on : http://{host}:{port}")
+    print(f" API Docs   : http://{host}:{port}/docs")
     print("=" * 60)
-    uvicorn.run("qshield.server.app:app", host=args.host, port=args.port, reload=args.reload)
+    uvicorn.run("qshield.server.app:app", host=host, port=port, reload=args.reload)
     return 0
 
 
