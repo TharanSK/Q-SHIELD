@@ -27,3 +27,8 @@ htmlcov/
 env/
 venv/
 ENV/
+
+# Node & Frontend
+node_modules/
+.vite/
+

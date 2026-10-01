@@ -1,9 +1,9 @@
 # PROJECT Q-SHIELD
 ### Quantum Signature Hybrid Integrity and Entanglement-Linked Detection
 
-[![CI Test Suite](https://img.shields.io/badge/pytest-16%20passed-brightgreen.svg)]()
+[![CI Test Suite](https://img.shields.io/badge/pytest-21%20passed-brightgreen.svg)]()
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)]()
-[![Architecture](https://img.shields.io/badge/engine-Non--ML%20Information--Theoretic-orange.svg)]()
+[![Fullstack UI](https://img.shields.io/badge/UI-FastAPI%20%2B%20ReactJS-cyan.svg)]()
 [![Throughput](https://img.shields.io/badge/throughput-%3E40%2C000%20qubits%2Fsec-success.svg)]()
 [![FAR](https://img.shields.io/badge/FAR-0.00%25-brightgreen.svg)]()
 
@@ -107,14 +107,29 @@ qshield/
 
 ---
 
-## 5. Quickstart & CLI Usage
+## 5. Quickstart & Interactive Web Dashboard
 
 ### Installation
 ```powershell
-py -3 -m pip install -e .
+py -3 -m pip install -e ".[dev]"
 ```
 
-### 1. Verify a Teleportation Signature
+### Launch Interactive Web Dashboard (FastAPI + ReactJS)
+Launch the integrated full-stack dashboard serving both the REST API and the React single-page application on a single port:
+
+```powershell
+py -3 -m qshield serve --port 8000
+```
+Then open your browser at **[http://localhost:8000](http://localhost:8000)**.
+Interactive features available in the UI:
+- **Teleportation QDS Tab**: Real-time message signing, MUB basis carrier visualizer, BSM outcomes, Pauli recovery, and fidelity distribution charts.
+- **Threat Defense Simulator Tab**: One-click synthetic attack injection (forgery, impersonation, nonce replay, monogamy violation, MITM intercept-resend) with live forensic defense alerts.
+- **Bell-CHSH Monitor Tab**: Live interactive quantum non-locality gauge tracking parameter $S$ against Tsirelson bound ($2.8284$) and classical limits.
+- **Security & Benchmarks Tab**: Real-time throughput metrics, FAR/FRR indicators, and information-theoretic bound proofs.
+
+---
+
+### Command-Line CLI Usage
 ```powershell
 py -3 -m qshield verify --message "FINANCIAL_PAYLOAD_0x8C1B" --samples 256 --noise 0.01
 ```

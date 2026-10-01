@@ -125,6 +125,24 @@ def cmd_bench(args: argparse.Namespace) -> int:
     return 0 if report.passed_all_gates else 1
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    """Launch the interactive FastAPI web dashboard."""
+    try:
+        import uvicorn
+    except ImportError:
+        print("Error: uvicorn is required to run the server. Install via: pip install uvicorn fastapi")
+        return 1
+
+    print("=" * 60)
+    print("      PROJECT Q-SHIELD: QUANTUM THREAT DASHBOARD")
+    print("=" * 60)
+    print(f" Serving on : http://{args.host}:{args.port}")
+    print(f" API Docs   : http://{args.host}:{args.port}/docs")
+    print("=" * 60)
+    uvicorn.run("qshield.server.app:app", host=args.host, port=args.port, reload=args.reload)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(
@@ -132,6 +150,13 @@ def main(argv: list[str] | None = None) -> int:
         description="Project Q-SHIELD: Quantum-Inspired Cyber Threat Detection Framework",
     )
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
+
+    # serve
+    p_serve = subparsers.add_parser("serve", help="Launch interactive web dashboard & API server")
+    p_serve.add_argument("--host", type=str, default="127.0.0.1", help="Host interface to bind")
+    p_serve.add_argument("--port", type=int, default=8000, help="Port to listen on")
+    p_serve.add_argument("--reload", action="store_true", help="Enable auto-reload on code change")
+    p_serve.set_defaults(func=cmd_serve)
 
     # verify
     p_verify = subparsers.add_parser("verify", help="Execute teleportation-based QDS verification")
